@@ -1,0 +1,39 @@
+version: '2'
+
+services:
+  nginx:
+    build: ./requirements/nginx
+    container_name: nginx
+    ports:
+      - "443:443"
+    env_file: ".env"
+    networks:
+      - web
+  mariadb:
+    build: ./requirements/mariadb
+    container_name: mariadb
+    # ports:
+    #   - "3306:3306"
+    env_file: ".env"
+    volumes:
+      - /home/eburnet/data/mariadb:/var/lib/mysql
+    networks:
+      - db
+  wordpress:
+    depends_on:
+      - nginx
+      - mariadb
+    build: ./requirements/wordpress
+    container_name: wordpress
+    # ports:
+    #   - "9000:9000"
+    env_file: ".env"
+    volumes:
+      - /home/eburnet/data/wp:/var/www/html
+    networks:
+      - web
+      - db
+
+networks:
+  web:
+  db:
