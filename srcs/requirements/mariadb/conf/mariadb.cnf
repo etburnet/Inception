@@ -1,7 +1,5 @@
 [mysqld]
-port = 3306
-# Tout les appareils du reseaux peuvent se connecter
+port=3306
 bind_address=*
-
 datadir=/var/lib/mysql
 user=mysql
