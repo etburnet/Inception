@@ -1,5 +1,7 @@
 #!/bin/bash
 
+chown -R 101:101 /var/lib/mysql
+
 if [ ! -d "/var/lib/mysql/mysql" ]; then
     mysql_install_db --user=mysql --ldata=/var/lib/mysql > /dev/null
 fi

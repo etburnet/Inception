@@ -14,6 +14,4 @@ COPY ./tools/wp_config.sh ./wp_config.sh
 
 COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
 
-EXPOSE 9000
-
 ENTRYPOINT ["/wp_config.sh"]
