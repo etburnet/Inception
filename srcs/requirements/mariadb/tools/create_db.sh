@@ -1,13 +1,22 @@
 #!/bin/bash
 
-mariadbd --user=mysql --datadir=/var/lib/mysql &
-sleep 1
+if [ ! -d "/var/lib/mysql/mysql" ]; then
+    mysql_install_db --user=mysql --ldata=/var/lib/mysql > /dev/null
+fi
+
+mysqld_safe --skip-networking --user=mysql &
+
+until mysqladmin ping --silent; do
+    sleep 1
+done
 
 mysql -u root <<EOF
 CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;
-CREATE USER IF NOT EXISTS '${SQL_USER}'@'localhost' IDENTIFIED BY '${SQL_PASS}';
-GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${SQL_USER}'@'localhost';
+CREATE USER IF NOT EXISTS '${SQL_USER}'@'%' IDENTIFIED BY '${SQL_PASS}';
+GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${SQL_USER}'@'%';
 FLUSH PRIVILEGES;
 EOF
 
-wait %1
+mysqladmin shutdown
+
+exec mariadbd
